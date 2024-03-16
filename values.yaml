@@ -1,0 +1,3 @@
+username: YourUserName
+password: $2y$10$G0l.owcCMBOtgmr9C/.55OBzliuFiHxD1wuDXuJsmIHJCWIXwFTxq
+ssh_public_key: "/path/to/publik/key/id_rsa.pub"
