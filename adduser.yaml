@@ -1,0 +1,33 @@
+- name: Create user and add SSH key
+  hosts: hosts
+  remote_user: root
+  become: yes
+
+
+  vars_files:
+  - values.yaml
+
+  tasks:
+  - name: Add the user
+    ansible.builtin.user:
+      name: "{{ username }}"
+      password: "{{ password }}"
+      shell: /bin/bash
+      groups: sudo
+      createhome: yes
+     
+  - name: Add the SSH public key
+    authorized_key:
+      user: "{{ username }}"
+      key: "{{ lookup('file', ssh_public_key) }}"
+      state: present
+
+
+  - name: Add user to AllowUsers in sshd_config
+    ansible.builtin.shell:
+      cmd: "sed -i -e '/^AllowUsers/ s/$/ {{ username }}/' /etc/ssh/sshd_config"
+
+  - name: Restart SSH server
+    ansible.builtin.service:
+      name: ssh
+      state: restarted
